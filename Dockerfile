@@ -1,19 +1,17 @@
-# Gradle build üçün ən uyğun image
-FROM gradle:8.4-jdk17 AS build
+FROM gradle:8.5-jdk17 AS build
 
-# Kodun fayllarını kopyalayırıq
+# Kodları konteynerə kopyalayırıq
 COPY . .
 
 # Gradle ilə tətbiqi build edirik
 RUN gradle build -x test
 
-# Final image: Java 17 ilə tətbiqi işə salırıq
+# Java image-ını istifadə edirik
 FROM eclipse-temurin:17-jdk
 
 # Build edilmiş jar faylını kopyalayırıq
-COPY --from=build build/libs/*.jar app.jar
+COPY --from=build /home/gradle/build/libs/*.jar app.jar
 
-# 8080 portunu açırıq
 EXPOSE 8080
 
 # Tətbiqi işə salırıq
